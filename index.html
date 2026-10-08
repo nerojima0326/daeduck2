@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>대덕전자 아트브릿지 | 장애 예술인 작품 디지털 전시·큐레이션</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="experience.css" />
+</head>
+<body>
+  <a class="skip" href="#main">본문 바로가기</a>
+
+  <header class="topbar">
+    <div class="brand" data-go="home" role="button" tabindex="0">
+      <span class="logo">◐</span>
+      <div>
+        <strong><a class="corp" href="https://www.daeduck.com/ko/main.do" target="_blank" rel="noopener noreferrer" title="대덕전자 공식 홈페이지 (새 창)" aria-label="대덕전자 공식 홈페이지 새 창으로 열기">대덕전자</a>아트브릿지</strong>
+        <small>DAEDUCK ART BRIDGE · 장애 예술인 작품 전시</small>
+      </div>
+    </div>
+    <nav class="nav" aria-label="주요 메뉴">
+      <button data-go="home" class="active">홈</button>
+      <button data-go="archive">작품</button>
+      <button data-go="artists">작가</button>
+      <button data-go="register" class="member-only">작품 등록</button>
+      <button data-go="exhibit">온라인 전시</button>
+      <button data-go="map">사내 감상 코스</button>
+      <button data-go="saved" class="member-only">관심 작품</button>
+      <button data-go="stats">통계</button>
+      <button data-go="vision">대덕전자 비전</button>
+      <!-- 관리자 전용 메뉴 묶음 -->
+      <div class="nav-menu admin-only" id="adminMenu">
+        <button type="button" class="nav-admin" id="adminMenuBtn" aria-haspopup="true" aria-expanded="false">
+          🛡 관리 <span class="nav-count" id="pendingCount" hidden></span> ▾
+        </button>
+        <div class="nav-dropdown" role="menu" hidden>
+          <button data-go="requests" role="menuitem">📋 배치 신청 관리 <span class="nav-count" id="pendingCount2" hidden></span></button>
+          <button data-go="location" role="menuitem">📍 위치 관리</button>
+          <button data-go="members" role="menuitem">👥 회원 관리</button>
+          <button data-go="reviews" role="menuitem">해설 검수 · 작가 이야기</button>
+        </div>
+      </div>
+    </nav>
+    <div class="a11y">
+      <details class="a11y-menu"><summary>접근성</summary>
+      <div class="font-ctrl" role="group" aria-label="글자 크기 조절">
+        <button id="btnFontDown" title="글자 작게" aria-label="글자 작게">가<sup>−</sup></button>
+        <button id="btnFontReset" title="기본 크기로" aria-label="글자 크기 기본으로">100%</button>
+        <button id="btnFontUp" title="글자 크게" aria-label="글자 크게">가<sup>+</sup></button>
+      </div>
+      <label><input type="checkbox" id="contrastToggle" /> 높은 대비</label>
+      <label><input type="checkbox" id="motionToggle" /> 움직임 줄이기</label>
+      </details>
+    </div>
+    <div class="auth-area" id="authArea"></div>
+  </header>
+
+  <main id="main">
+    <!-- 홈 -->
+    <section class="view active" id="view-home">
+      <div class="hero">
+        <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow">대덕전자 ESG 프로젝트 · 보관을 넘어 ‘발견’과 ‘공감’의 플랫폼으로</p>
+          <h1>우리 회사의 작품을 만나고,<br /><span class="grad-text">작가의 이야기를 들어보세요.</span></h1>
+          <p class="lead">잠깐의 감상이 새로운 시선을 만듭니다. 작품을 둘러보고, 해설을 듣고, 우리 공간에 어울리는 작품을 제안해 보세요.</p>
+          <div class="hero-actions">
+            <button class="btn primary" data-go="archive">작품 둘러보기</button>
+            <button class="btn ghost" data-go="exhibit">온라인 전시 감상</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="home-feature"><h2 class="sec-title">이달의 전시</h2><div id="featuredExhibit"></div></section>
+      <section class="home-feature"><h2 class="sec-title">오늘의 한 작품 <small>하루 한 번, 새로운 만남</small></h2><div id="dailyArtwork"></div></section>
+      <section><h2 class="sec-title">작가의 이야기</h2><div class="artist-grid" id="homeArtists"></div></section>
+      <details class="workflow"><summary>작품이 전시되고 기록되는 과정</summary>
+      <ol class="steps">
+        <li data-go="register"><span>01</span>작품 등록</li>
+        <li data-go="location"><span>02</span>데이터·위치 관리</li>
+        <li data-go="archive" data-hint="ai"><span>03</span>AI 설명 생성</li>
+        <li data-go="archive"><span>04</span>탐색/추천</li>
+        <li data-go="exhibit"><span>05</span>온라인·사내 전시</li>
+        <li data-go="stats"><span>06</span>관심 행동·데이터 축적</li>
+      </ol>
+      </details>
+
+      <!-- 대덕전자 CEO 메시지 배너 -->
+      <div class="corp-banner">
+        <div>
+          <p class="eyebrow">대덕전자가 꿈꾸는 기업</p>
+          <blockquote>“‘좋은 기업’을 넘어 <em>‘옳은 기업’</em>으로”</blockquote>
+          <p class="muted">아트브릿지는 사람 중심 ESG 경영을 실천하는 대덕전자의 장애 예술인 상생 프로젝트입니다.</p>
+        </div>
+        <button class="btn primary" data-go="vision">대덕전자 비전 보기 →</button>
+      </div>
+
+      <div class="two-col home-cols">
+        <div>
+          <h2 class="sec-title">당신을 위한 추천 작품 <small id="recoReason"></small></h2>
+          <div class="grid small" id="recoGrid"></div>
+        </div>
+        <div>
+          <h2 class="sec-title">함께 만드는 전시</h2>
+          <ul class="activity" id="activityList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 아카이브 -->
+    <section class="view" id="view-archive">
+      <div class="view-head">
+        <h1>작품 아카이브</h1>
+        <p>작품명·작가·태그로 검색하고, 위치와 상태로 필터링하세요.</p>
+      </div>
+      <div class="toolbar">
+        <input type="search" id="q" placeholder="🔍 작품명, 작가, 태그 검색" aria-label="검색" />
+        <select id="fTag" aria-label="태그 필터"><option value="">전체 태그</option></select>
+        <select id="fLoc" aria-label="위치 필터"><option value="">전체 위치</option></select>
+        <select id="fSort" aria-label="정렬">
+          <option value="featured">사진 있는 작품 먼저</option>
+          <option value="new">최신 등록순</option>
+          <option value="likes">공감 많은순</option>
+          <option value="views">조회 많은순</option>
+          <option value="title">작품명순</option>
+        </select>
+      </div>
+      <div class="filter-actions"><label><input type="checkbox" id="photoOnly" /> 사진 있는 작품만</label><button class="btn ghost small" id="clearFilters">필터 초기화</button></div>
+      <p class="result-count" id="resultCount"></p>
+      <div class="grid" id="archiveGrid"></div>
+      <button class="btn ghost load-more" id="archiveMore" hidden>작품 더 보기</button>
+    </section>
+
+    <!-- 작품 등록 -->
+    <section class="view" id="view-register">
+      <div class="view-head">
+        <h1 id="regTitle">작품 등록</h1>
+        <p>기본 정보와 작가의 의도를 입력하면 AI가 설명을 만들어 드립니다.</p>
+      </div>
+      <div class="register-wrap">
+        <form id="regForm" class="card form" autocomplete="off">
+          <input type="hidden" name="id" />
+          <div class="row">
+            <label>작품명 *<input name="title" required maxlength="40" /></label>
+            <label>작가명 *<input name="artist" required maxlength="20" /></label>
+          </div>
+          <div class="row">
+            <label>제작연도<input name="year" inputmode="numeric" maxlength="10" placeholder="2025" /></label>
+            <label>재료/기법<input name="medium" placeholder="캔버스에 아크릴" /></label>
+            <label>크기<input name="size" placeholder="60×90cm" /></label>
+          </div>
+          <div class="row">
+            <label>테마
+              <select name="theme">
+                <option value="">선택 안 함</option>
+                <option>자연</option><option>이야기</option><option>가족</option><option>감정</option>
+              </select>
+            </label>
+            <label>추가 태그 (쉼표로 구분)<input name="tags" placeholder="꽃, 봄, 따뜻함" /></label>
+          </div>
+          <label>작가 소개<textarea name="artistBio" rows="2" maxlength="500" placeholder="화풍, 활동 기간 등 (예: 화풍: 수채화, 밝고 유머러스함)"></textarea></label>
+          <label>작가의 작품 설명<textarea name="intent" rows="4" maxlength="2000" placeholder="작가가 직접 쓴 작품 설명을 입력해 주세요. AI 설명 생성에도 활용됩니다."></textarea></label>
+          <label>작품의 시각 묘사<textarea name="visualDescription" rows="3" maxlength="2000" placeholder="사진에서 확인한 색·구도·대상을 설명해 주세요. 추측한 내용은 넣지 않습니다."></textarea><small class="hint">이미지를 볼 수 없는 관람객을 위한 설명입니다.</small></label>
+          <div class="row">
+            <label>현재 위치 *
+              <select name="locationId" id="regLoc" required></select>
+              <small class="hint" id="regLocHint"></small>
+            </label>
+            <label>작품 이미지
+              <input type="file" name="image" id="regImage" accept="image/*" />
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn ghost" id="regReset">초기화</button>
+            <button type="submit" class="btn primary" id="regSubmit">등록하고 AI 설명 생성</button>
+          </div>
+        </form>
+        <aside class="card preview">
+          <p class="eyebrow">미리보기</p>
+          <div class="preview-img" id="regPreviewImg"></div>
+          <h3 id="regPreviewTitle">작품명</h3>
+          <p id="regPreviewArtist" class="muted">작가명</p>
+          <div class="tags" id="regPreviewTags"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 위치 관리 -->
+    <section class="view" id="view-location">
+      <div class="view-head">
+        <h1>데이터·위치 관리</h1>
+        <p>작품 썸네일을 다른 공간으로 <b>드래그</b>하면 위치가 이동되고 이력이 기록됩니다.</p>
+      </div>
+      <div class="floor-map" id="floorMap"></div>
+      <h2 class="sec-title">이동 이력</h2>
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>일시</th><th>작품</th><th>이전 위치</th><th>→</th><th>새 위치</th><th>사유</th></tr></thead>
+          <tbody id="moveLog"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 온라인 전시 -->
+    <section class="view" id="view-exhibit">
+      <div class="view-head">
+        <h1>온라인·사내 전시</h1>
+        <p>작품을 골라 기획 전시를 만들고, 누구나 온라인 전시관에서 감상할 수 있습니다.</p>
+      </div>
+      <div class="grid exhibits" id="exhibitList"></div>
+      <div class="form-actions left"><button class="btn primary" id="openExPlanner">새 전시 기획하기</button></div>
+      <section id="exPlanner" hidden><h2 class="sec-title">새 전시 기획하기</h2>
+      <form id="exForm" class="card form">
+        <div class="row">
+          <label>전시 제목 *<input name="title" required maxlength="40" placeholder="봄을 닮은 색" /></label>
+          <label>큐레이터<input name="curator" maxlength="20" placeholder="경영지원팀" /></label>
+        </div>
+        <label>전시 소개<textarea name="desc" rows="2"></textarea></label>
+        <p class="hint guest-only">🔒 로그인한 회원만 전시를 기획할 수 있어요.</p>
+        <p class="label">전시할 작품 선택 *</p>
+        <input type="search" id="exPickSearch" placeholder="전시할 작품 검색" aria-label="전시할 작품 검색" /><div class="pick-list" id="exPick"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn primary">전시 만들기</button>
+        </div>
+      </form>
+      </section>
+    </section>
+
+    <!-- 통계 -->
+    <section class="view" id="view-stats">
+      <div class="view-head">
+        <h1>함께 만든 성과</h1>
+        <p>관람과 참여가 실제 전시로 이어지는 과정을 살펴보세요.</p>
+      </div>
+      <div class="kpis wide" id="statKpis"></div>
+      <label class="period-filter">성과 집계 기간 <select id="impactPeriod"><option value="7">최근 7일</option><option value="30" selected>최근 30일</option><option value="90">최근 90일</option><option value="all">전체 기간</option></select></label>
+      <div class="kpis wide" id="impactKpis"></div><p class="hint" id="impactNote"></p>
+      <div class="two-col"><div class="card"><h3>월별 관람 횟수</h3><div id="monthlyViews" class="bars"></div></div><div class="card"><h3>작품 사진 등록 현황</h3><p id="photoCoverage"></p><p class="hint">담당자는 정보 수정에서 원본 작품 사진을 등록할 수 있습니다. 실제 작품을 확인할 수 없는 대체 그림은 사용하지 않습니다.</p></div></div>
+      <div class="two-col">
+        <div class="card">
+          <h3>공감 TOP 5</h3>
+          <div class="bars" id="barLikes"></div>
+        </div>
+        <div class="card">
+          <h3>임직원 감정 반응 (선호도 조사)</h3>
+          <div class="bars" id="barFeel"></div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <h3>태그별 관심도 (조회+공감)</h3>
+          <div class="bars" id="barTags"></div>
+        </div>
+        <div class="card">
+          <h3>최근 관람 소감</h3>
+          <ul class="comments" id="commentList"></ul>
+        </div>
+      </div>
+      <div class="form-actions left">
+        <button class="btn ghost" id="btnExport">데이터 CSV 내보내기</button>
+        <button class="btn danger-ghost admin-only" id="btnResetAll" hidden>데모 데이터 초기화</button>
+      </div>
+    </section>
+
+    <!-- 배치 신청 관리 (관리자 전용) -->
+    <section class="view" id="view-requests">
+      <div class="view-head">
+        <h1>배치 신청 관리 <span class="badge admin">관리자 전용</span></h1>
+        <p>회원이 제안한 우리 공간의 전시입니다. <b>승인 → 설치 대기 → 사진 확인 → 설치 완료</b> 순서로 처리하며, 실제 설치를 확인한 뒤 위치가 바뀝니다.</p>
+      </div>
+      <div class="kpis wide" id="reqKpis"></div>
+      <div class="status-tabs" role="tablist" id="reqTabs">
+        <button data-reqtab="pending" class="active">⏳ 대기</button>
+        <button data-reqtab="approved">승인 · 설치</button>
+        <button data-reqtab="rejected">✕ 반려</button>
+        <button data-reqtab="cancelled">취소</button>
+        <button data-reqtab="">전체</button>
+      </div>
+      <div class="req-list" id="reqList"></div>
+    </section>
+
+    <!-- 회원 관리 (관리자 전용) -->
+    <section class="view" id="view-members">
+      <div class="view-head">
+        <h1>회원 관리 <span class="badge admin">관리자 전용</span></h1>
+        <p>가입한 임직원의 계정 정보를 확인하고, 등급 변경·비밀번호 초기화·부서별 관리자 키를 관리합니다.</p>
+      </div>
+      <div class="kpis wide" id="memberKpis"></div>
+
+      <div class="toolbar">
+        <input type="search" id="mq" placeholder="🔍 이름, 이메일, 부서 검색" aria-label="회원 검색" />
+        <select id="mRole" aria-label="등급 필터">
+          <option value="">전체 등급</option>
+          <option value="member">일반 회원</option>
+          <option value="admin">관리자</option>
+        </select>
+        <select id="mSort" aria-label="정렬">
+          <option value="new">최근 가입순</option>
+          <option value="login">최근 로그인순</option>
+          <option value="name">이름순</option>
+        </select>
+      </div>
+      <p class="result-count" id="memberCount"></p>
+      <div class="card table-wrap">
+        <table class="member-table">
+          <thead><tr><th>이름</th><th>이메일 (아이디)</th><th>부서</th><th>등급</th><th>가입일</th><th>최근 로그인</th><th>비밀번호</th><th>활동</th><th>관리</th></tr></thead>
+          <tbody id="userTable"></tbody>
+        </table>
+      </div>
+      <p class="hint" style="margin-top:8px">🔒 비밀번호는 복구할 수 없는 방식(해시)으로 암호화 저장되어 관리자도 볼 수 없어요. 회원이 비밀번호를 잊었다면 <b>초기화</b>로 임시 비밀번호를 발급해 주세요. 회원은 다음 로그인 때 새 비밀번호로 바꾸게 됩니다.</p>
+
+      <div>
+        <h2 class="sec-title">부서별 관리자 키</h2>
+        <p class="hint" style="margin:-6px 0 12px">관리자로 가입하려면 소속 부서의 키가 필요해요. 키는 안전하게 암호화되어 저장되므로 <b>발급·재발급하는 순간에만 한 번</b> 볼 수 있어요.</p>
+        <div class="card table-wrap">
+          <table>
+            <thead><tr><th>부서</th><th>관리자 수</th><th>최근 발급</th><th>발급자</th><th>키 관리</th></tr></thead>
+            <tbody id="deptKeyTable"></tbody>
+          </table>
+        </div>
+        <form id="deptAddForm" class="dept-add">
+          <input name="dept" maxlength="20" placeholder="새 부서명 (예: 품질보증팀)" aria-label="새 부서명" required />
+          <button type="submit" class="btn primary small">+ 부서 추가하고 키 발급</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 대덕전자 비전 -->
+    <section class="view" id="view-vision">
+      <div class="vision-hero">
+        <div>
+          <p class="eyebrow">DAEDUCK ELECTRONICS × ART BRIDGE</p>
+          <h1>대덕전자가 <span class="grad-text">장애 예술인과</span><br />함께하는 이유</h1>
+          <p class="lead">대덕전자의 장애 예술인 지원은 <b>‘고용을 통한 활동 지원’</b>과 <b>‘사람 중심의 ESG 경영’</b>이라는 방향에서 이해할 수 있습니다. 아트브릿지는 그 성과를 더 많은 사람에게 알리는 디지털 전시 공간입니다.</p>
+          <a class="btn primary" href="https://www.daeduck.com/ko/main.do" target="_blank" rel="noopener noreferrer">대덕전자 공식 홈페이지 ↗</a>
+        </div>
+        <ul class="vision-values" aria-label="대덕전자 핵심가치">
+          <li>창의</li><li>긍정</li><li>열정</li><li>화합</li><li>도전</li>
+        </ul>
+      </div>
+
+      <h2 class="sec-title">대표이사 메시지</h2>
+      <div class="quote-grid">
+        <figure class="quote-card">
+          <blockquote>“우리는 단지 ‘좋은 기업’이 되는 것을 넘어서, ‘옳은 기업’이 되고자 사람과 지구를 위한 지속가능 경영을 추구합니다.”</blockquote>
+          <figcaption><b>신영환 대표이사</b><span>대덕전자 행동규범 CEO 메시지</span></figcaption>
+        </figure>
+        <figure class="quote-card">
+          <blockquote>“ESG경영은 지속가능한 미래를 위한 책임이자 기회입니다.”</blockquote>
+          <figcaption><b>대덕전자</b><span>2026년 6월 공식 ESG CEO 메시지</span></figcaption>
+        </figure>
+      </div>
+
+      <h2 class="sec-title">경영이념과 지향점</h2>
+      <div class="vision-grid">
+        <article class="card v-card">
+          <span class="v-icon">🧭</span>
+          <h3>경영이념</h3>
+          <p><b>기술과 품질 · 고객지향 · 공동운명체</b></p>
+          <p class="muted">공동운명체란 “회사의 번영과 각 개인의 충실한 삶의 일치”를 뜻합니다.</p>
+          <small class="src">출처: 공식 회사개요</small>
+        </article>
+        <article class="card v-card">
+          <span class="v-icon">💎</span>
+          <h3>핵심가치</h3>
+          <p><b>창의 · 긍정 · 열정 · 화합 · 도전</b></p>
+          <p class="muted">구성원 모두가 공유하는 다섯 가지 가치입니다.</p>
+          <small class="src">출처: 공식 회사개요</small>
+        </article>
+        <article class="card v-card">
+          <span class="v-icon">🚀</span>
+          <h3>사업의 지향점</h3>
+          <p><b>글로벌 No.1 소재 부품 기업</b></p>
+          <p class="muted">반도체를 중심으로 도전하며 성장하고, 100년을 이어가는 기업을 지향합니다.</p>
+          <small class="src">출처: 대표이사 인사말</small>
+        </article>
+        <article class="card v-card">
+          <span class="v-icon">🤝</span>
+          <h3>사회공헌 방향</h3>
+          <p><b>사회적 약자의 역량 강화</b></p>
+          <p class="muted">청소년·장애인 등 사회적 약자의 역량 강화를 지원하고, 실질적이고 지속 가능한 사회적 가치를 만듭니다.</p>
+          <small class="src">출처: 공식 사회·윤리경영 페이지</small>
+        </article>
+      </div>
+
+      <h2 class="sec-title">ESG 세 가지 비전</h2>
+      <div class="esg-grid">
+        <div class="esg"><span>E</span><h3>지구 생태계 가치 보존</h3></div>
+        <div class="esg strong"><span>S</span><h3>사회적 가치 제고</h3><p>취약계층 지원과 교육·문화사업 등 사회공헌 활동 확대</p><em>아트브릿지가 함께하는 비전</em></div>
+        <div class="esg"><span>G</span><h3>신뢰 기반 거버넌스</h3></div>
+      </div>
+      <p class="hint" style="margin-top:8px">출처: 대덕전자 공식 ESG 경영정책</p>
+
+      <h2 class="sec-title">장애 예술인 지원, 이렇게 해 왔습니다</h2>
+      <ol class="timeline">
+        <li>
+          <time>2023년 3분기</time>
+          <h3>장애 예술인·체육인 고용을 ESG 활동으로 명시</h3>
+          <p>IR 자료에 장애 예술인·체육인 고용과 이들의 활동 후원을 ESG 활동으로 밝혔습니다.</p>
+          <small class="src">출처: 대덕전자 IR 자료, 8쪽</small>
+        </li>
+        <li>
+          <time>2024년 8월</time>
+          <h3>청각장애 한국화가 이명상 작가, ‘대덕전자 소속’으로 소개</h3>
+          <p>『사랑의열매』 2024년 8월호에 대덕전자 소속 작가로 소개되었습니다. (당시 자료 기준)</p>
+          <small class="src">출처: 사랑의열매 2024년 8월호</small>
+        </li>
+      </ol>
+
+      <h2 class="sec-title">아트브릿지가 잇는 세 가지 가치</h2>
+      <div class="bridge-grid">
+        <div class="bridge"><b>01</b><h3>창작 활동의 지속 지원</h3><p>회사가 고용을 통해 지원하는 예술인의 작품을 체계적으로 기록하고 활용합니다.</p></div>
+        <div class="bridge"><b>02</b><h3>작품과 작가의 사회적 연결</h3><p>전시를 통해 더 많은 사람이 작품을 감상하고 작가의 재능과 이야기를 만납니다.</p></div>
+        <div class="bridge"><b>03</b><h3>사회적 가치의 구체화</h3><p>장애인의 역량 강화와 사람 중심 경영을 임직원이 직접 체감하는 문화 경험으로 보여줍니다.</p></div>
+      </div>
+      <p class="hint" style="margin-top:8px">※ 위 세 가지는 확인된 고용·ESG 방향을 바탕으로 한 해커톤 팀의 해석이며, 회사가 직접 밝힌 수집·전시 목적은 아닙니다.</p>
+
+      <div class="mission-box">
+        <p class="eyebrow">우리 팀의 문제 정의</p>
+        <p class="mission">대덕전자가 지원하는 장애 예술인의 작품과 이야기가 더 많은 사람에게 닿도록,<br />작품 관리와 감상을 연결하는 전시 경험을 만든다.</p>
+        <div class="hero-actions">
+          <button class="btn primary" data-go="archive">작품 만나러 가기</button>
+          <a class="btn ghost" href="https://www.daeduck.com/ko/main.do" target="_blank" rel="noopener noreferrer">대덕전자 홈페이지 ↗</a>
+        </div>
+      </div>
+    </section>
+    <section class="view" id="view-artists"><div class="view-head"><h1>작가를 만나다</h1><p>작가의 시선과 작업 이야기를 따라 작품을 만나보세요.</p></div><input type="search" id="artistSearch" aria-label="작가 검색" placeholder="작가 이름 검색" /><div class="artist-grid" id="artistList"></div><div id="artistProfile" hidden></div></section>
+    <section class="view" id="view-map"><div class="view-head"><h1>사내 감상 코스</h1><p>같은 공간의 작품을 묶어 잠깐의 감상 시간을 가져보세요.</p></div><p class="notice">사내 공간은 출입 권한에 따라 방문할 수 있습니다. VIP·연구소 공간은 담당자 확인이 필요하며, 이 화면은 실제 층별 위치를 정리한 목록입니다.</p><div class="map-actions"><label>감상할 공간 <select id="mapLocation"></select></label><button class="btn primary" id="startCourse">10분 감상 코스 시작</button></div><div id="spaceMap"></div></section>
+    <section class="view" id="view-saved"><div class="view-head"><h1>나의 관심 작품</h1><p>다시 보고 싶은 작품과 좋아하는 작가의 다른 작품을 모았습니다.</p></div><div class="grid" id="savedGrid"></div><h2 class="sec-title">관심 작가의 다른 작품</h2><div class="grid" id="savedRelated"></div><div id="myProposals"></div></section>
+    <section class="view" id="view-reviews"><div class="view-head"><h1>해설 검수 · 작가 이야기</h1><p>작가의 실제 설명과 공개 동의를 확인한 뒤 내용을 게시해 주세요.</p></div><div id="reviewList"></div><h2 class="sec-title">작가 이야기 편집</h2><form id="artistEditor" class="card form"><label>작가 <select name="artist" id="editorArtist"></select></label><label>작업 이야기<textarea name="story" rows="5" maxlength="3000"></textarea></label><label>인터뷰<textarea name="interview" rows="5" maxlength="3000" placeholder="공개에 동의한 인터뷰를 입력해 주세요."></textarea></label><label><input name="published" type="checkbox" /> 이야기 공개</label><label><input name="consent" type="checkbox" /> 작가가 이 내용의 공개에 동의했음을 확인했습니다.</label><p class="hint">새로운 이야기와 인터뷰를 임의로 만들지 않습니다. 공개된 정보만 관람객에게 표시됩니다.</p><p id="artistEditorError" class="form-error" role="alert"></p><button class="btn primary" type="submit">작가 이야기 저장</button></form><button class="btn ghost" id="exportMessages">작가에게 전달할 감상 CSV 내려받기</button><p class="hint">CSV를 확인한 뒤 운영 담당자가 작가에게 직접 전달해 주세요.</p></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="brand">
+          <span class="logo">◐</span>
+          <div>
+            <strong><a class="corp" href="https://www.daeduck.com/ko/main.do" target="_blank" rel="noopener noreferrer" title="대덕전자 공식 홈페이지 (새 창)" aria-label="대덕전자 공식 홈페이지 새 창으로 열기">대덕전자</a>아트브릿지</strong>
+            <small>DAEDUCK ART BRIDGE</small>
+          </div>
+        </div>
+        <p>장애 예술인의 작품을 기록하고, 이야기하고, 함께 만나는<br />대덕전자의 사람 중심 ESG 프로젝트입니다.</p>
+        <p class="footer-quote">“좋은 기업을 넘어, 옳은 기업으로”</p>
+      </div>
+      <nav class="footer-col" aria-label="바로가기">
+        <h4>바로가기</h4>
+        <button data-go="archive">작품 아카이브</button>
+        <button data-go="artists">작가 이야기</button>
+        <button data-go="map">사내 감상 코스</button>
+        <button data-go="exhibit">온라인 전시</button>
+        <button data-go="register" class="member-only">작품 등록</button>
+        <button data-go="stats">통계</button>
+        <button data-go="vision">대덕전자 비전</button>
+      </nav>
+      <div class="footer-col">
+        <h4>대덕전자</h4>
+        <a href="https://www.daeduck.com/ko/main.do" target="_blank" rel="noopener noreferrer">공식 홈페이지 ↗</a>
+        <span>경영이념 · 기술과 품질, 고객지향, 공동운명체</span>
+        <span>핵심가치 · 창의 긍정 열정 화합 도전</span>
+      </div>
+      <div class="footer-col">
+        <h4>접근성</h4>
+        <span>글자 크기 · 높은 대비 · 움직임 줄이기</span>
+        <span>작품 설명 음성 읽기 지원</span>
+        <span>키보드만으로 이용 가능</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 대덕전자 아트브릿지. 대덕전자 기업 문제 해결 해커톤 프로토타입입니다.</span>
+      <button class="link" id="btnTop">맨 위로 ↑</button>
+    </div>
+  </footer>
+
+  <!-- 작품 상세 모달 -->
+  <div class="modal" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="dTitle" hidden>
+    <div class="modal-box">
+      <button class="close" data-close aria-label="닫기">✕</button>
+      <div class="detail" id="detailBody"></div>
+    </div>
+  </div>
+
+  <!-- 신청 모달 -->
+  <div class="modal" id="reqModal" role="dialog" aria-modal="true" hidden>
+    <div class="modal-box narrow">
+      <button class="close" data-close aria-label="닫기">✕</button>
+      <h2>우리 공간에 전시 제안</h2>
+      <div class="req-art" id="reqArt"></div>
+      <form id="reqForm" class="form" novalidate>
+        <input type="hidden" name="artworkId" />
+        <p class="hint" id="reqWho"></p>
+        <label>희망 위치 *<select name="locationId" id="reqLoc" required></select></label>
+        <div class="row">
+          <label>시작일 *<input type="date" name="from" required /></label>
+          <label>종료일 *<input type="date" name="to" required /></label>
+        </div>
+        <label>신청 사유<textarea name="note" rows="2" maxlength="300" placeholder="예: 직원 식당에 봄 분위기를 더하고 싶어요"></textarea></label>
+        <p class="form-error" id="reqError" role="alert"></p>
+        <p class="hint">담당자 승인 후 설치를 준비합니다. 실제 설치 사진을 확인한 뒤 작품 위치가 업데이트됩니다.</p>
+        <div class="form-actions">
+          <button type="submit" class="btn primary">전시 제안 보내기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 로그인 / 회원가입 모달 -->
+  <div class="modal auth-modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" hidden>
+    <div class="modal-box narrow auth-box">
+      <button class="close" data-close aria-label="닫기">✕</button>
+      <div class="auth-brand">
+        <span class="logo">◐</span>
+        <div>
+          <h2 id="authTitle">대덕전자 아트브릿지에 오신 것을 환영해요</h2>
+          <p class="muted" id="authSub">작품에 공감하고, 우리 공간에 작품을 신청해 보세요.</p>
+        </div>
+      </div>
+      <div class="auth-tabs" role="tablist">
+        <button data-auth-tab="login" role="tab">로그인</button>
+        <button data-auth-tab="signup" role="tab">회원가입</button>
+      </div>
+      <div class="auth-notice" id="authNotice" role="alert" hidden></div>
+
+      <form id="loginForm" class="form" autocomplete="on" novalidate>
+        <label>이메일<input type="email" name="email" autocomplete="username" placeholder="name@company.com" required /></label>
+        <label>비밀번호
+          <span class="pw-wrap">
+            <input type="password" name="password" autocomplete="current-password" required />
+            <button type="button" class="pw-toggle" aria-label="비밀번호 보기">보기</button>
+          </span>
+        </label>
+        <label class="check"><input type="checkbox" name="remember" checked /> 로그인 상태 유지</label>
+        <p class="form-error" id="loginError" role="alert"></p>
+        <button type="submit" class="btn primary block">로그인</button>
+        <p class="switch-line">아직 회원이 아니신가요? <button type="button" class="link" data-auth-tab="signup">회원가입</button></p>
+        <div class="demo-login">
+          <p>해커톤 시연용 계정으로 바로 체험하기</p>
+          <div>
+            <button type="button" class="btn ghost small" data-demo="admin">🛡 관리자로 체험</button>
+            <button type="button" class="btn ghost small" data-demo="member">🙂 일반 회원으로 체험</button>
+          </div>
+        </div>
+      </form>
+
+      <form id="signupForm" class="form signup-form" autocomplete="off" novalidate hidden>
+        <div class="signup-intro">
+          <span class="signup-badge">NEW</span>
+          <p><b>처음 오셨나요?</b> 가입 유형을 고르고 정보를 입력하면 바로 가입되고 자동으로 로그인됩니다.</p>
+        </div>
+
+        <fieldset class="type-picker" aria-label="가입 유형">
+          <label class="type-card">
+            <input type="radio" name="accountType" value="member" checked />
+            <span class="type-icon">🙂</span>
+            <span><b>일반 회원</b><small>작품 감상·공감·배치 신청·작품 등록</small></span>
+          </label>
+          <label class="type-card">
+            <input type="radio" name="accountType" value="admin" />
+            <span class="type-icon">🛡</span>
+            <span><b>관리자</b><small>부서 관리자 키 필요 · 위치 관리·신청 승인</small></span>
+          </label>
+        </fieldset>
+
+        <fieldset class="signup-group">
+          <legend>① 기본 정보</legend>
+          <label>이름 *<input name="name" maxlength="20" placeholder="홍길동" autocomplete="name" required /></label>
+          <label>이메일 (로그인 아이디) *<input type="email" name="email" placeholder="name@company.com" autocomplete="email" required /></label>
+        </fieldset>
+
+        <fieldset class="signup-group admin-group" hidden>
+          <legend>🛡 관리자 인증</legend>
+          <p class="hint">관리자는 <b>소속 부서</b>를 고르고, 그 부서에 발급된 <b>관리자 키</b>를 입력해야 가입할 수 있어요. 키는 부서 담당 관리자에게 받으세요.</p>
+          <label>관리 부서 *
+            <select name="adminDept" id="adminDeptSel">
+              <option value="">부서를 선택하세요</option>
+            </select>
+          </label>
+          <label>부서 관리자 키 *
+            <span class="pw-wrap">
+              <input type="password" name="adminKey" placeholder="예: DD-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" />
+              <button type="button" class="pw-toggle" aria-label="관리자 키 보기">보기</button>
+            </span>
+          </label>
+        </fieldset>
+
+        <fieldset class="signup-group">
+          <legend>② 비밀번호 설정</legend>
+          <label>비밀번호 *
+            <span class="pw-wrap">
+              <input type="password" name="password" autocomplete="new-password" placeholder="영문+숫자 6자 이상" required />
+              <button type="button" class="pw-toggle" aria-label="비밀번호 보기">보기</button>
+            </span>
+            <span class="pw-meter" aria-hidden="true"><i id="pwMeter"></i></span>
+            <span class="pw-rules" id="pwRules">
+              <span data-rule="len">6자 이상</span><span data-rule="alpha">영문 포함</span><span data-rule="digit">숫자 포함</span>
+            </span>
+          </label>
+          <label>비밀번호 확인 *
+            <span class="pw-wrap">
+              <input type="password" name="password2" autocomplete="new-password" placeholder="비밀번호를 한 번 더 입력하세요" required />
+              <button type="button" class="pw-toggle" aria-label="비밀번호 확인 보기">보기</button>
+            </span>
+            <span class="pw-match" id="pwMatch" aria-live="polite"></span>
+          </label>
+        </fieldset>
+        <label class="check"><input type="checkbox" name="agree" /> (필수) 서비스 이용 및 개인정보 수집에 동의합니다.</label>
+        <p class="form-error" id="signupError" role="alert"></p>
+        <button type="submit" class="btn primary block signup-submit">✓ 회원가입 완료하기</button>
+        <p class="switch-line">이미 계정이 있으신가요? <button type="button" class="link" data-auth-tab="login">로그인</button></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- 관리자 키 발급 결과 모달 -->
+  <div class="modal" id="keyModal" role="dialog" aria-modal="true" aria-labelledby="keyTitle" hidden>
+    <div class="modal-box narrow key-box">
+      <button class="close" data-close aria-label="닫기">✕</button>
+      <p class="eyebrow" id="keyEyebrow">관리자 키 발급 완료</p>
+      <h2 id="keyTitle"></h2>
+      <div class="key-display">
+        <code id="keyValue"></code>
+        <button class="btn primary small" id="keyCopy">복사</button>
+      </div>
+      <p class="lock-note" id="keyNote"></p>
+      <div class="form-actions"><button class="btn ghost" data-close>확인했어요</button></div>
+    </div>
+  </div>
+
+  <!-- 비밀번호 변경 모달 -->
+  <div class="modal auth-modal" id="pwModal" role="dialog" aria-modal="true" aria-labelledby="pwTitle" hidden>
+    <div class="modal-box narrow">
+      <button class="close" data-close aria-label="닫기">✕</button>
+      <h2 id="pwTitle">비밀번호 변경</h2>
+      <p class="auth-notice" id="pwForceNotice" hidden>🔑 관리자가 발급한 <b>임시 비밀번호</b>로 로그인했어요. 안전을 위해 지금 새 비밀번호로 바꿔 주세요.</p>
+      <form id="pwForm" class="form" novalidate>
+        <label>현재 비밀번호 *
+          <span class="pw-wrap">
+            <input type="password" name="current" autocomplete="current-password" required />
+            <button type="button" class="pw-toggle" aria-label="비밀번호 보기">보기</button>
+          </span>
+        </label>
+        <label>새 비밀번호 * <small class="muted">(영문+숫자 6자 이상)</small>
+          <span class="pw-wrap">
+            <input type="password" name="next" autocomplete="new-password" required />
+            <button type="button" class="pw-toggle" aria-label="비밀번호 보기">보기</button>
+          </span>
+        </label>
+        <label>새 비밀번호 확인 *<input type="password" name="next2" autocomplete="new-password" required /></label>
+        <p class="form-error" id="pwError" role="alert"></p>
+        <button type="submit" class="btn primary block">비밀번호 변경하기</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 마이페이지 모달 -->
+  <div class="modal" id="myModal" role="dialog" aria-modal="true" aria-label="마이페이지" hidden>
+    <div class="modal-box narrow">
+      <button class="close" data-close aria-label="닫기">✕</button>
+      <div id="myBody"></div>
+    </div>
+  </div>
+
+  <!-- 작품 자세히 보기 (3D) -->
+  <div class="viewer3d" id="v3d" role="dialog" aria-modal="true" aria-labelledby="v3dTitle" hidden>
+    <div class="v3d-glow" aria-hidden="true"></div>
+    <header class="v3d-top">
+      <div>
+        <p class="eyebrow">DETAIL VIEW · 3D</p>
+        <h2 id="v3dTitle" class="grad-text"></h2>
+        <p class="muted" id="v3dMeta"></p>
+      </div>
+      <button class="close" id="v3dClose" aria-label="자세히 보기 닫기">✕</button>
+    </header>
+    <div class="v3d-stage" id="v3dStage" tabindex="0" aria-label="작품 3D 보기. 드래그하거나 방향키로 회전, 더하기 빼기로 확대">
+      <div class="v3d-zoom" id="v3dZoom">
+        <div class="v3d-art" id="v3dArt">
+          <div class="face front"><img id="v3dFront" alt="" draggable="false" /><span class="glare" id="v3dGlare"></span></div>
+          <div class="face back"><img id="v3dBack" alt="" draggable="false" /><span class="back-label">뒷면 · 좌우 반전</span></div>
+          <div class="edge right"></div><div class="edge left"></div><div class="edge top"></div><div class="edge bottom"></div>
+        </div>
+      </div>
+      <div class="v3d-shadow" id="v3dShadow" aria-hidden="true"></div>
+    </div>
+    <div class="v3d-bar">
+      <div class="v3d-angle" aria-live="polite"><b id="v3dDeg">0°</b><span id="v3dSide">앞면</span></div>
+      <div class="v3d-controls">
+        <button data-v3d="left" title="왼쪽으로 45° (←)">⟲ 45°</button>
+        <button data-v3d="flip" class="flip" title="180° 뒤집기 (더블클릭 / F)">⇆ 180° 뒤집기</button>
+        <button data-v3d="right" title="오른쪽으로 45° (→)">45° ⟳</button>
+        <span class="sep"></span>
+        <button data-v3d="out" title="축소 (-)" aria-label="축소">−</button>
+        <span class="v3d-zoomval" id="v3dZoomVal">100%</span>
+        <button data-v3d="in" title="확대 (+)" aria-label="확대">+</button>
+        <span class="sep"></span>
+        <button data-v3d="auto" id="v3dAuto" aria-pressed="false" title="자동 회전 (A)">▶ 자동 회전</button>
+        <button data-v3d="reset" title="처음 상태로 (R)">처음으로</button>
+      </div>
+      <p class="v3d-help">드래그로 회전 · 휠로 확대/축소 · 더블클릭으로 뒤집기 · 키보드 ← → ↑ ↓ / + − / F / R / Esc</p>
+    </div>
+  </div>
+
+  <!-- 전시 뷰어 -->
+  <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle" hidden>
+    <button class="close light" id="vClose" aria-label="전시 닫기">✕</button>
+    <div class="v-stage">
+      <button class="v-nav" id="vPrev" aria-label="이전 작품">‹</button>
+      <figure>
+        <img id="vImg" alt="" />
+        <figcaption>
+          <p class="eyebrow" id="vEx"></p>
+          <h2 id="vTitle"></h2>
+          <p id="vArtist" class="muted"></p>
+          <p id="vDesc"></p>
+          <div class="v-actions">
+            <button class="btn light" id="vLike">♡ 공감</button>
+            <button class="btn light" id="vSpeak">🔊 듣기</button>
+            <span id="vCount"></span>
+          </div>
+          <div id="viewerAudio"></div>
+        </figcaption>
+      </figure>
+      <button class="v-nav" id="vNext" aria-label="다음 작품">›</button>
+    </div>
+  </div>
+
+  <div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle" hidden><div class="modal-box narrow"><button class="close" data-close aria-label="닫기">✕</button><h2 id="shareTitle">작품 QR · 공유</h2><div id="shareContent"></div></div></div>
+  <div class="modal" id="installModal" role="dialog" aria-modal="true" aria-labelledby="installTitle" hidden><div class="modal-box narrow"><button class="close" data-close aria-label="닫기">✕</button><h2 id="installTitle">실제 설치 확인</h2><form class="form" id="installForm"><input type="hidden" name="requestId" /><p id="installArtwork"></p><label>설치 사진 *<input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required /></label><label><input type="checkbox" name="confirmed" required /> 희망 위치에 실제 작품이 설치된 것을 확인했습니다.</label><p class="form-error" id="installError" role="alert"></p><button class="btn primary" type="submit">사진 확인하고 설치 완료</button></form></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+  <script src="experience.js"></script>
+</body>
+</html>
